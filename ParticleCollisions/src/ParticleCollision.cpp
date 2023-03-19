@@ -9,7 +9,20 @@ using namespace ci::app;
 using namespace std;
 
 #define NUM_PARTICLES 50
-#define REPULSION_FORCE_AMPLIFICATION_FACTOR 10.0f
+#define MAX_RADIUS 40.0f
+#define MIN_RADIUS 5.0f
+#define REPULSION_FORCE 10.0f
+string getRandomShape() {
+    int random = Rand::randInt(0, 3);
+    if (random == 0) {
+        return "circle";
+    } else if (random == 1) {
+        return "square";
+    } else {
+        return "triangle";
+    }
+}
+
 class Particle {
     public:
         vec2 position; // Posición actual de la partícula
@@ -19,6 +32,7 @@ class Particle {
         vec2 acceleration; // Aceleración actual de la partícula
         vec2 force; // Fuerza resultante que actúa sobre la partícula
         ColorA color;
+        string shape; // shape of the particle
 };
 
 class ParticleCollision : public App {
@@ -37,10 +51,12 @@ void ParticleCollision::setup() {
         // Configurar valores iniciales
         p.position = vec2(Rand::randFloat(getWindowWidth()), Rand::randFloat(getWindowHeight()));
         p.velocity = vec2(Rand::randFloat(-5.0f, 5.0f), Rand::randFloat(-5.0f, 5.0f));
-        p.radius = Rand::randFloat(5.0f, 20.0f);
+        p.radius = Rand::randFloat(MIN_RADIUS, MAX_RADIUS);
         p.mass = p.radius * 0.1f;
-        p.acceleration = vec2(0, 0);
+        //p.acceleration = vec2(Rand::randFloat(0.0f, 1.0f), Rand::randFloat(0.0f, 1.0f));
+        p.acceleration = vec2(0.0f, 0.0f);
         p.force = vec2(0, 0);
+        p.shape = getRandomShape();
         // Asigna un color random
         p.color = Color( CM_HSV, lmap<float>( i, 0.0f, NUM_PARTICLES, 0.0f, 0.66f ), 1.0f, 1.0f );
         particles.push_back(p);
@@ -63,7 +79,7 @@ void ParticleCollision::update() {
                 float overlap = p.radius + other.radius - distance + offset;
                 if (overlap > 0) {
                     vec2 normal = glm::normalize(direction);
-                    vec2 collision_force = normal * overlap * REPULSION_FORCE_AMPLIFICATION_FACTOR;
+                    vec2 collision_force = normal * overlap * REPULSION_FORCE;
                     p.force -= collision_force;
                 }
             }
@@ -98,8 +114,15 @@ void ParticleCollision::draw() {
     gl::clear(Color(0, 0, 0));
      // Dibujar todas las partículas
     for (const auto& p : particles) {
+        string shape = p.shape;
         gl::color(p.color);
-        gl::drawSolidCircle(p.position, p.radius);
+        if (shape == "circle") {
+            gl::drawSolidCircle(p.position, p.radius);
+        } else if (shape == "square") {
+            gl::drawSolidRect(Rectf(p.position.x - p.radius, p.position.y - p.radius, p.position.x + p.radius, p.position.y + p.radius));
+        } else {
+            gl::drawSolidTriangle(vec2(p.position.x - p.radius, p.position.y + p.radius), vec2(p.position.x + p.radius, p.position.y + p.radius), vec2(p.position.x, p.position.y - p.radius));
+        }
     }
 }
 
