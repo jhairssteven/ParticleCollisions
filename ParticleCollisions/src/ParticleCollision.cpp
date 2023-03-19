@@ -19,6 +19,9 @@ class Particle {
         vec2 acceleration; // Aceleración actual de la partícula
         vec2 force; // Fuerza resultante que actúa sobre la partícula
         ColorA color;
+        void changeSpeed(vec2 newSpeed) {
+            velocity = newSpeed;
+        }
 };
 
 class ParticleCollision : public App {
@@ -26,9 +29,22 @@ class ParticleCollision : public App {
         void setup() override;
         void update() override;
         void draw() override;
+        void mouseDown( MouseEvent event ) override;
     private:
         vector<Particle> particles;
+        int speedFactor = 1;
 };
+
+
+
+//void speedUpOnClick(MouseEvent event) {
+    //if(event.isLeftDown()) {
+        //for (int i = 0; i < particles.size(); i++) {
+            //Particle& p = particles[i];
+            //p.velocity *= 1.1f;
+        //}
+    //}
+//}
 
 void ParticleCollision::setup() {
     // Inicializar las partículas
@@ -94,13 +110,65 @@ void ParticleCollision::update() {
     }
 }
 
+void drawParticleSpeed(const Particle& p) {
+    gl::color(Color(1, 1, 1));
+    gl::drawLine(p.position, p.position + p.velocity);
+    // draw speed value over the particle
+    gl::drawStringCentered(to_string(glm::length(p.velocity)), p.position);
+}
+
+void ParticleCollision::mouseDown( MouseEvent event ) {
+    //if right click, increase
+    if(event.isLeftDown()) {
+       if(speedFactor < 100) {
+            for (int i = 0; i < particles.size(); i++) {
+                Particle& p = particles[i];
+                p.velocity *= 1.5f;
+            }
+
+            speedFactor++;
+        } 
+    }
+
+    //if left click, decrease
+    if(event.isRightDown()) {
+       if(speedFactor > 1) {
+            for (int i = 0; i < particles.size(); i++) {
+                Particle& p = particles[i];
+                p.velocity *= 0.5f;
+            }
+
+            speedFactor--;
+        }
+    }
+
+    //if middle click, reset
+    if(event.isMiddleDown()) {
+        for (int i = 0; i < particles.size(); i++) {
+            Particle& p = particles[i];
+            p.velocity = vec2(Rand::randFloat(-5.0f, 5.0f), Rand::randFloat(-5.0f, 5.0f));
+        }
+
+        speedFactor = 1;
+    }
+} 
+
 void ParticleCollision::draw() {
     gl::clear(Color(0, 0, 0));
      // Dibujar todas las partículas
-    for (const auto& p : particles) {
+    for (const Particle& p : particles) {
         gl::color(p.color);
         gl::drawSolidCircle(p.position, p.radius);
+        drawParticleSpeed(p);
     }
+
+    //draw how to increase and decrease the speed
+    gl::color(Color(1, 1, 1));
+    gl::drawStringCentered("Click left to increase speed", vec2(100, 50));
+    gl::drawStringCentered("Click right to decrease speed", vec2(100, 75));
+    gl::drawStringCentered("Click middle to reset speed", vec2(100, 100));
+    //draw speed factor
+    gl::drawStringCentered("Speed factor: " + to_string(speedFactor), vec2(100, 150));
 }
 
 CINDER_APP(ParticleCollision, RendererGl)
