@@ -28,6 +28,7 @@ class ParticleCollision : public App {
         void draw() override;
     private:
         vector<Particle> particles;
+        float gravity;
 };
 
 void ParticleCollision::setup() {
@@ -45,6 +46,7 @@ void ParticleCollision::setup() {
         p.color = Color( CM_HSV, lmap<float>( i, 0.0f, NUM_PARTICLES, 0.0f, 0.66f ), 1.0f, 1.0f );
         particles.push_back(p);
     }
+    gravity = 9.8f;
 }
 
 void ParticleCollision::update() {
@@ -73,7 +75,7 @@ void ParticleCollision::update() {
         float y = p.position[1];
         x += x < p.radius ? -p.radius : p.radius;
         y += y < p.radius ? -p.radius : p.radius;
-        
+
         if (x < 0 || x > getWindowWidth()) {
             p.velocity[0] = -p.velocity[0];
             p.position[0] = x < 0 ? p.radius : getWindowWidth() - p.radius;
@@ -81,26 +83,29 @@ void ParticleCollision::update() {
             p.velocity[1] = -p.velocity[1];
             p.position[1] = y < 0 ? p.radius : getWindowHeight() - p.radius;
         }
-        float timeStep = 0.1f;
+    
+        // Agregar gravedad
+        float gravity = 50.0f;
+        p.force += vec2(0, gravity * p.mass);
 
-         // Aplicar la fuerza resultante sobre la partícula
+        // Aplicar la fuerza resultante sobre la partícula
         p.acceleration = p.force / p.mass;
-        p.velocity += p.acceleration * timeStep;
+        p.velocity += p.acceleration * 0.1f;
         // Actualizar la posición de la partícula en base a su velocidad
-        p.position += p.velocity * timeStep;
+        p.position += p.velocity * 0.1f;
         // Resetear la fuerza acumulada para la siguiente iteración
         p.force = vec2(0, 0);
-                
     }
+
 }
 
 void ParticleCollision::draw() {
     gl::clear(Color(0, 0, 0));
-     // Dibujar todas las partículas
+    // Dibujar todas las partículas
     for (const auto& p : particles) {
         gl::color(p.color);
         gl::drawSolidCircle(p.position, p.radius);
     }
-}
+}  
 
 CINDER_APP(ParticleCollision, RendererGl)
