@@ -39,15 +39,15 @@ void ParticleCollision::setup() {
     
     // Crear el GUI con los controles
     mParams = params::InterfaceGl::create(getWindow(), "La particula", toPixels(ivec2(200, 400)));
-    mParams.addParam("Activar modo random", &Opcion);
-    mParams.addText("Si su respuesta es negativa, por favot no rellene los espacios", "font-size=24");
-    mParams.addSeparator(); // add horizontal line separating controls
-    mParams.addParam("Radio Particula", &radius, "min=5.0 max=20.0 step = 0.5 keyIncr = z keyDecr = Z"); //Radio
-    mParams.addParam("Masa Particula", &mass, "min=5.0 max=20.0 step = 0.5 keyIncr = z keyDecr = Z"); // Masa
-    mParams.addParam("Gravedad del sistema", &gravity, "min=2 max=15 step = 0.1 keyIncr = z keyDecr = Z"); // Gravedad
-    mParams.addSeparator(); // add horizontal line separating controls
-    mParams.addParam("Velocidad", &velocity, "") // Velocidad
-        mParams.addParam("Numero de particulas" & NP, "min=1 max=50 step = 5 keyIncr = z keyDecr = Z");
+    mParams->addText("Si su respuesta es negativa, por favot no rellene los espacios", "font-size=24");
+    mParams->addParam("Activar modo random", &Opcion);
+    mParams->addSeparator(); // add horizontal line separating controls
+    mParams->addParam("Radio Particula", &radius, "min=5.0 max=20.0 step = 0.5 keyIncr = z keyDecr = Z"); //Radio
+    mParams->addParam("Masa Particula", &mass, "min=5.0 max=20.0 step = 0.5 keyIncr = z keyDecr = Z"); // Masa
+    mParams->addParam("Gravedad del sistema", &gravity, "min=2 max=15 step = 0.1 keyIncr = z keyDecr = Z"); // Gravedad
+    mParams->addSeparator(); // add horizontal line separating controls
+    mParams->addParam("Velocidad", &velocity, ""); // Velocidad
+        mParams->addParam("Numero de particulas" &NP, "min=1 max=50 step = 5 keyIncr = z keyDecr = Z");
     
     // Inicializar las partículas
      if (Opcion) {
