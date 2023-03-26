@@ -4,6 +4,8 @@
 #include "cinder/gl/gl.h"
 #include <vector>
 #include "cinder/params/Params.h"
+#include "cinder/CinderImGui.h"
+
 
 using namespace ci;
 using namespace ci::app;
@@ -20,6 +22,7 @@ class Particle {
         vec2 acceleration; // Aceleración actual de la partícula
         vec2 force; // Fuerza resultante que actúa sobre la partícula
         ColorA color;
+
 };
 
 class ParticleCollision : public App {
@@ -29,50 +32,45 @@ class ParticleCollision : public App {
         void draw() override;
     private:
         vector<Particle> particles;
-    params::InterfaceGlRef mParams;
+        params::InterfaceGlRef mParams;
+        void updateGui();
+
+        vec2 velocity2; // Velocidad actual de la partícula
+        float radius2; // Radio de la partícula
+        float mass2; // Masa de la partícula
+        float gravity2;
+        bool Opcion2;
+        int Nump2;
 };
 
 void ParticleCollision::setup() {
-    vec2 velocity; // Velocidad actual de la partícula
-    float radius; // Radio de la partícula
-    float mass; // Masa de la partícula
-    float gravity;
     bool Opcion;
-    float Nump;
-    // Crear el GUI con los controles
-    mParams = params::InterfaceGl::create(getWindow(), "La particula", toPixels(ivec2(200, 400)));
-    mParams->addParam("Activar modo random", &Opcion);
-    mParams->addText("Si su respuesta es negativa, por favot no rellene los espacios", "font-size=24");
-    mParams->addSeparator(); // add horizontal line separating controls
-    mParams->addParam("Radio Particula", &radius, "min=5.0 max=20.0 step = 0.5 keyIncr = z keyDecr = Z"); //Radio
-    mParams->addParam("Masa Particula", &mass, "min=5.0 max=20.0 step = 0.5 keyIncr = z keyDecr = Z"); // Masa
-    mParams->addParam("Gravedad del sistema", &gravity, "min=2 max=15 step = 0.1 keyIncr = z keyDecr = Z"); // Gravedad
-    mParams->addSeparator(); // add horizontal line separating controls
-    mParams->addParam("Velocidad", &velocity, ""); // Velocidad
-    mParams->addParam("Numero de particulas", &Nump, "min=1 max=50 step = 5 keyIncr = z keyDecr = Z");
+
+    ImGui::Initialize();
+
     // Inicializar las partículas
-     if (Opcion) {
-    for (int i = 0; i < NUM_PARTICLES; i++) {
-        Particle p;
-        // Configurar valores iniciales
-        p.position = vec2(Rand::randFloat(getWindowWidth()), Rand::randFloat(getWindowHeight()));
-        p.velocity = vec2(Rand::randFloat(-5.0f, 5.0f), Rand::randFloat(-5.0f, 5.0f));
-        p.radius = Rand::randFloat(5.0f, 20.0f);
-        p.mass = p.radius * 0.1f;
-        p.acceleration = vec2(0, 0);
-        p.force = vec2(0, 0);
-        // Asigna un color random
-        p.color = Color( CM_HSV, lmap<float>( i, 0.0f, NUM_PARTICLES, 0.0f, 0.66f ), 1.0f, 1.0f );
-        particles.push_back(p);
+    if (Opcion2) {
+        for (int i = 0; i < NUM_PARTICLES; i++) {
+            Particle p;
+            // Configurar valores iniciales
+            p.position = vec2(Rand::randFloat(getWindowWidth()), Rand::randFloat(getWindowHeight()));
+            p.velocity = vec2(Rand::randFloat(-5.0f, 5.0f), Rand::randFloat(-5.0f, 5.0f));
+            p.radius = Rand::randFloat(5.0f, 20.0f);
+            p.mass = p.radius * 0.1f;
+            p.acceleration = vec2(0, 0);
+            p.force = vec2(0, 0);
+            // Asigna un color random
+            p.color = Color(CM_HSV, lmap<float>(i, 0.0f, NUM_PARTICLES, 0.0f, 0.66f), 1.0f, 1.0f);
+            particles.push_back(p);
+        }
     }
-     }
-    for (int i = 0; i < Nump; i++) {
+    for (int i = 0; i < Nump2; i++) {
         Particle p;
         // Configurar valores iniciales
         p.position = vec2(Rand::randFloat(getWindowWidth()), Rand::randFloat(getWindowHeight()));
         p.velocity = vec2(Rand::randFloat(-5.0f, 5.0f), Rand::randFloat(-5.0f, 5.0f));
-        p.radius = radius;
-        p.mass = mass;
+        p.radius = radius2;
+        p.mass = mass2;
         p.acceleration = vec2(0, 0);
         p.force = vec2(0, 0);
         // Asigna un color random
@@ -83,6 +81,7 @@ void ParticleCollision::setup() {
 }
 
 void ParticleCollision::update() {
+    updateGui();
     float offset = 5.0f;
     // Actualizar las partículas
     for (int i = 0; i < particles.size(); i++) {
@@ -136,6 +135,30 @@ void ParticleCollision::draw() {
         gl::color(p.color);
         gl::drawSolidCircle(p.position, p.radius);
     }
+}
+
+void ParticleCollision::updateGui()
+{
+#if ! defined( CINDER_GL_ES )
+    static vector<string> primitives = { "Modo random", "Modo seleccion"};
+    static vector<string> qualities = { "Low", "Default", "High" };
+    static vector<string> viewModes = { "Shaded", "Wireframe" };
+    static vector<string> texturingModes = { "None", "Procedural", "Sampler" };
+
+    ImGui::Begin("Simualcion de choque");
+    ImGui::Separator();
+    if(!(ImGui::Checkbox("Modo random", &Opcion2))){
+    ImGui::Separator();
+    ImGui::DragFloat("Radio de las esferas", &radius2, 0.1f, 5.0f, 20.0f);
+    ImGui::DragFloat("Masa de las esferas", &mass2, 0.1f, 0.1f, 10.0f);
+    ImGui::DragFloat("Gravedad del sistema", &gravity2, 0.1f, 1.0f, 11.0f);
+    ImGui::DragInt("Numero de esferas", &Nump2, 1.0f, 2, 50);
+    ImGui::DragFloat2("Velocidad de las esferas", &velocity2, 0.1f, 0.1f, 80.0f);
+    }
+    ImGui::Separator();
+    ImGui::End();
+
+#endif
 }
 
 CINDER_APP(ParticleCollision, RendererGl)
