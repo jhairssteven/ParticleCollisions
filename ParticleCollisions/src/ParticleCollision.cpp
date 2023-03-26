@@ -66,7 +66,7 @@ void ParticleCollision::setup() {
         particles.push_back(p);
     }
      }
-    for (int i = 0; i < NP; i++) {
+    for (int i = 0; i < Nump; i++) {
         Particle p;
         // Configurar valores iniciales
         p.position = vec2(Rand::randFloat(getWindowWidth()), Rand::randFloat(getWindowHeight()));
