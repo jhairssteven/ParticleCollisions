@@ -21,7 +21,7 @@ class Particle {
         ColorA color;
 };
 
-class ParticleCollision : public App {
+class ParticleCollisions : public App {
     public:
         void setup() override;
         void update() override;
@@ -30,7 +30,7 @@ class ParticleCollision : public App {
         vector<Particle> particles;
 };
 
-void ParticleCollision::setup() {
+void ParticleCollisions::setup() {
     // Inicializar las partículas
     for (int i = 0; i < NUM_PARTICLES; i++) {
         Particle p;
@@ -47,7 +47,7 @@ void ParticleCollision::setup() {
     }
 }
 
-void ParticleCollision::update() {
+void ParticleCollisions::update() {
     float offset = 5.0f;
     // Actualizar las partículas
     for (int i = 0; i < particles.size(); i++) {
@@ -94,7 +94,7 @@ void ParticleCollision::update() {
     }
 }
 
-void ParticleCollision::draw() {
+void ParticleCollisions::draw() {
     gl::clear(Color(0, 0, 0));
      // Dibujar todas las partículas
     for (const auto& p : particles) {
@@ -103,4 +103,4 @@ void ParticleCollision::draw() {
     }
 }
 
-CINDER_APP(ParticleCollision, RendererGl)
+CINDER_APP(ParticleCollisions, RendererGl)
