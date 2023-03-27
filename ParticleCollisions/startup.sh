@@ -4,5 +4,5 @@ cd cmake
 mkdir -p build
 cd build
 cmake ..
-make 
+make
 ./Debug/$APP_NAME/$APP_NAME
