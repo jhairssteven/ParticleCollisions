@@ -45,6 +45,11 @@ void ParticleCollisions::imGuiUpdate() {
 |:---:|:---:|:---:|
 | [CrazyParticles](./ParticleCollisions/include/CrazyParticles.h) |  [ChangeSpeed](./ParticleCollisions/include/ChangeSpeed.h) |  [MultiShape](./ParticleCollisions/include/MultiShape.h) | 
 
+| | ![GravityFalls](./ParticleCollisions/assets/Gravity%20Falls.png) | |
+|:---:|:---:|:---:|
+| | [GravityFalls](./ParticleCollisions/include/GravityFalls.h) | |
+
+
 
 # ¿Cómo usarlo?
 Corra el archivo [startup.sh](./ParticleCollisions/startup.sh). Este archivo compila las dependencias necesarias y corre la simulación. 
