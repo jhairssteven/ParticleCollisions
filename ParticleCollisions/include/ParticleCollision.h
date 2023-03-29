@@ -1,8 +1,11 @@
+#pragma once
+
+#include <vector>
+
+#include "cinder/Rand.h"
 #include "cinder/app/App.h"
 #include "cinder/app/RendererGl.h"
-#include "cinder/Rand.h"
 #include "cinder/gl/gl.h"
-#include <vector>
 
 using namespace ci;
 using namespace ci::app;
@@ -24,24 +27,25 @@ string getRandomShape() {
 }
 
 class Particle {
-    public:
-        vec2 position; // Posición actual de la partícula
-        vec2 velocity; // Velocidad actual de la partícula
-        float radius; // Radio de la partícula
-        float mass; // Masa de la partícula
-        vec2 acceleration; // Aceleración actual de la partícula
-        vec2 force; // Fuerza resultante que actúa sobre la partícula
-        ColorA color;
-        string shape; // shape of the particle
+   public:
+    vec2 position;      // Posición actual de la partícula
+    vec2 velocity;      // Velocidad actual de la partícula
+    float radius;       // Radio de la partícula
+    float mass;         // Masa de la partícula
+    vec2 acceleration;  // Aceleración actual de la partícula
+    vec2 force;         // Fuerza resultante que actúa sobre la partícula
+    ColorA color;
+    string shape;  // shape of the particle
 };
 
 class ParticleCollision : public App {
-    public:
-        void setup() override;
-        void update() override;
-        void draw() override;
-    private:
-        vector<Particle> particles;
+   public:
+    void setup() override;
+    void update() override;
+    void draw() override;
+
+   private:
+    vector<Particle> particles;
 };
 
 void ParticleCollision::setup() {
@@ -49,16 +53,21 @@ void ParticleCollision::setup() {
     for (int i = 0; i < NUM_PARTICLES; i++) {
         Particle p;
         // Configurar valores iniciales
-        p.position = vec2(Rand::randFloat(getWindowWidth()), Rand::randFloat(getWindowHeight()));
-        p.velocity = vec2(Rand::randFloat(-5.0f, 5.0f), Rand::randFloat(-5.0f, 5.0f));
+        p.position = vec2(Rand::randFloat(getWindowWidth()),
+                          Rand::randFloat(getWindowHeight()));
+        p.velocity =
+            vec2(Rand::randFloat(-5.0f, 5.0f), Rand::randFloat(-5.0f, 5.0f));
         p.radius = Rand::randFloat(MIN_RADIUS, MAX_RADIUS);
         p.mass = p.radius * 0.1f;
-        //p.acceleration = vec2(Rand::randFloat(0.0f, 1.0f), Rand::randFloat(0.0f, 1.0f));
+        // p.acceleration = vec2(Rand::randFloat(0.0f, 1.0f),
+        // Rand::randFloat(0.0f, 1.0f));
         p.acceleration = vec2(0.0f, 0.0f);
         p.force = vec2(0, 0);
         p.shape = getRandomShape();
         // Asigna un color random
-        p.color = Color( CM_HSV, lmap<float>( i, 0.0f, NUM_PARTICLES, 0.0f, 0.66f ), 1.0f, 1.0f );
+        p.color =
+            Color(CM_HSV, lmap<float>(i, 0.0f, NUM_PARTICLES, 0.0f, 0.66f),
+                  1.0f, 1.0f);
         particles.push_back(p);
     }
 }
@@ -89,7 +98,7 @@ void ParticleCollision::update() {
         float y = p.position[1];
         x += x < p.radius ? -p.radius : p.radius;
         y += y < p.radius ? -p.radius : p.radius;
-        
+
         if (x < 0 || x > getWindowWidth()) {
             p.velocity[0] = -p.velocity[0];
             p.position[0] = x < 0 ? p.radius : getWindowWidth() - p.radius;
@@ -99,29 +108,33 @@ void ParticleCollision::update() {
         }
         float timeStep = 0.1f;
 
-         // Aplicar la fuerza resultante sobre la partícula
+        // Aplicar la fuerza resultante sobre la partícula
         p.acceleration = p.force / p.mass;
         p.velocity += p.acceleration * timeStep;
         // Actualizar la posición de la partícula en base a su velocidad
         p.position += p.velocity * timeStep;
         // Resetear la fuerza acumulada para la siguiente iteración
         p.force = vec2(0, 0);
-                
     }
 }
 
 void ParticleCollision::draw() {
     gl::clear(Color(0, 0, 0));
-     // Dibujar todas las partículas
+    // Dibujar todas las partículas
     for (const auto& p : particles) {
         string shape = p.shape;
         gl::color(p.color);
         if (shape == "circle") {
             gl::drawSolidCircle(p.position, p.radius);
         } else if (shape == "square") {
-            gl::drawSolidRect(Rectf(p.position.x - p.radius, p.position.y - p.radius, p.position.x + p.radius, p.position.y + p.radius));
+            gl::drawSolidRect(
+                Rectf(p.position.x - p.radius, p.position.y - p.radius,
+                      p.position.x + p.radius, p.position.y + p.radius));
         } else {
-            gl::drawSolidTriangle(vec2(p.position.x - p.radius, p.position.y + p.radius), vec2(p.position.x + p.radius, p.position.y + p.radius), vec2(p.position.x, p.position.y - p.radius));
+            gl::drawSolidTriangle(
+                vec2(p.position.x - p.radius, p.position.y + p.radius),
+                vec2(p.position.x + p.radius, p.position.y + p.radius),
+                vec2(p.position.x, p.position.y - p.radius));
         }
     }
 }
