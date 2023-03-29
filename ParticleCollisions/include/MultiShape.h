@@ -2,6 +2,7 @@
 
 #include <vector>
 
+#include "Mode.h"
 #include "cinder/Rand.h"
 #include "cinder/app/App.h"
 #include "cinder/app/RendererGl.h"
@@ -11,10 +12,13 @@ using namespace ci;
 using namespace ci::app;
 using namespace std;
 
+namespace multi_shape {
+
 #define NUM_PARTICLES 50
 #define MAX_RADIUS 40.0f
 #define MIN_RADIUS 5.0f
 #define REPULSION_FORCE 10.0f
+
 string getRandomShape() {
     int random = Rand::randInt(0, 3);
     if (random == 0) {
@@ -38,7 +42,7 @@ class Particle {
     string shape;  // shape of the particle
 };
 
-class ParticleCollision : public App {
+class MultiShape : public Mode {
    public:
     void setup() override;
     void update() override;
@@ -48,7 +52,7 @@ class ParticleCollision : public App {
     vector<Particle> particles;
 };
 
-void ParticleCollision::setup() {
+void MultiShape::setup() {
     // Inicializar las partículas
     for (int i = 0; i < NUM_PARTICLES; i++) {
         Particle p;
@@ -72,7 +76,7 @@ void ParticleCollision::setup() {
     }
 }
 
-void ParticleCollision::update() {
+void MultiShape::update() {
     float offset = 5.0f;
     // Actualizar las partículas
     for (int i = 0; i < particles.size(); i++) {
@@ -118,7 +122,7 @@ void ParticleCollision::update() {
     }
 }
 
-void ParticleCollision::draw() {
+void MultiShape::draw() {
     gl::clear(Color(0, 0, 0));
     // Dibujar todas las partículas
     for (const auto& p : particles) {
@@ -138,5 +142,4 @@ void ParticleCollision::draw() {
         }
     }
 }
-
-CINDER_APP(ParticleCollision, RendererGl)
+}  // namespace multi_shape

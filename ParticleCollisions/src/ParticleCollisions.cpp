@@ -4,6 +4,7 @@
 
 #include "Mode.h"
 #include "CrazyParticles.h"
+#include "MultiShape.h"
 
 using namespace ci::app;
 
@@ -40,7 +41,10 @@ void ParticleCollisions::imGuiUpdate() {
         selectedMode = new CrazyParticles();
         selectedMode->setup();
     }
-
+    if (ImGui::Button("Multi Shape")) {
+        selectedMode = new multi_shape::MultiShape();
+        selectedMode->setup();
+    }
     ImGui::End();  // Draw the ImGui UI
 }
 
