@@ -38,12 +38,13 @@ void ParticleCollisions::imGuiUpdate() {
 
     ImGui::End();  // Draw the ImGui UI
 }
-
 ```
+
+# Modos implementados
+| ![CrazyParticles](./ParticleCollisions/assets/Crazy.png)  | ![ChangeSpeedAudioBlocks](./ParticleCollisions/assets/Change%20speed.png) | ![MultiShape](./ParticleCollisions/assets/Multi%20shape.png) |
+|:---:|:---:|:---:|
+| [CrazyParticles](./ParticleCollisions/include/CrazyParticles.h) |  [ChangeSpeed](./ParticleCollisions/include/ChangeSpeed.h) |  [MultiShape](./ParticleCollisions/include/MultiShape.h) | 
+
+
 # ¿Cómo usarlo?
 Corra el archivo [startup.sh](./ParticleCollisions/startup.sh). Este archivo compila las dependencias necesarias y corre la simulación. 
-
-**Oprime el botón "Crazy" para reinicira la simulación**
-
-# Ejemplo
-![image](./ParticleCollisions/assets/startup.png)
