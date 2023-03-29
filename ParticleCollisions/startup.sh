@@ -1,8 +1,8 @@
-APP_NAME="ParticleCollision"
+APP_NAME="ParticleCollisions"
 cd proj
 cd cmake
 mkdir -p build
 cd build
 cmake ..
-make 
+make
 ./Debug/$APP_NAME/$APP_NAME
