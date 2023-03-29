@@ -1,9 +1,12 @@
+#include <iostream>
+
 #include "cinder/CinderImGui.h"
-#include "cinder/app/App.h"
 #include "cinder/app/RendererGl.h"
+#include "cinder/app/App.h"
 
 #include "Mode.h"
 #include "CrazyParticles.h"
+#include "ChangeSpeed.h"
 #include "MultiShape.h"
 
 using namespace ci::app;
@@ -13,7 +16,7 @@ class ParticleCollisions : public App {
     void setup() override;
     void update() override;
     void draw() override;
-
+    void mouseDown(MouseEvent event) override;
     void imGuiUpdate();
 
    private:
@@ -45,7 +48,15 @@ void ParticleCollisions::imGuiUpdate() {
         selectedMode = new multi_shape::MultiShape();
         selectedMode->setup();
     }
+    if (ImGui::Button("Change Speed")) {
+        selectedMode = new change_speed::ChangeSpeed();
+        selectedMode->setup();
+    }
     ImGui::End();  // Draw the ImGui UI
+}
+
+void ParticleCollisions::mouseDown(MouseEvent event) {
+    selectedMode->mouseDown(event);
 }
 
 CINDER_APP(ParticleCollisions, RendererGl)

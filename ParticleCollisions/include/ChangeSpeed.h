@@ -1,5 +1,9 @@
+#pragma once
+
+#include <iostream>
 #include <vector>
 
+#include "Mode.h"
 #include "cinder/Rand.h"
 #include "cinder/app/App.h"
 #include "cinder/app/RendererGl.h"
@@ -25,7 +29,7 @@ class Particle {
     void changeSpeed(vec2 newSpeed) { velocity = newSpeed; }
 };
 
-class ParticleCollision : public App {
+class ChangeSpeed : public Mode {
    public:
     void setup() override;
     void update() override;
@@ -46,7 +50,7 @@ class ParticleCollision : public App {
 //}
 //}
 
-void ParticleCollision::setup() {
+void ChangeSpeed::setup() {
     // Inicializar las partículas
     for (int i = 0; i < NUM_PARTICLES; i++) {
         Particle p;
@@ -67,7 +71,7 @@ void ParticleCollision::setup() {
     }
 }
 
-void ParticleCollision::update() {
+void ChangeSpeed::update() {
     float offset = 5.0f;
     // Actualizar las partículas
     for (int i = 0; i < particles.size(); i++) {
@@ -121,7 +125,8 @@ void drawParticleSpeed(const Particle& p) {
     gl::drawStringCentered(to_string(glm::length(p.velocity)), p.position);
 }
 
-void ParticleCollision::mouseDown(MouseEvent event) {
+void ChangeSpeed::mouseDown(MouseEvent event) {
+    std::cout << "Change speed mouse down\n";
     // if right click, increase
     if (event.isLeftDown()) {
         if (speedFactor < 100) {
@@ -158,7 +163,7 @@ void ParticleCollision::mouseDown(MouseEvent event) {
     }
 }
 
-void ParticleCollision::draw() {
+void ChangeSpeed::draw() {
     gl::clear(Color(0, 0, 0));
     // Dibujar todas las partículas
     for (const Particle& p : particles) {
