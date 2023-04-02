@@ -10,7 +10,6 @@
 #include "MultiShape.h"
 #include "GravityFalls.h"
 #include "SelectParam.h"
-
 using namespace ci::app;
 
 class ParticleCollisions : public App {
@@ -59,7 +58,7 @@ void ParticleCollisions::imGuiUpdate() {
         selectedMode->setup();
     }
     if (ImGui::Button("Select Param")) {
-        selectedMode = new Select_Param::SelectParam();       
+        selectedMode = new select_Param::SelectParam();       
         selectedMode->setup();
     }
     ImGui::End();  // Draw the ImGui UI

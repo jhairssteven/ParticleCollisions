@@ -1,18 +1,20 @@
+#pragma once
+#include <iostream>
+#include <vector>
+
+#include "Mode.h"
+#include "cinder/CinderImGui.h"
+#include "cinder/Rand.h"
 #include "cinder/app/App.h"
 #include "cinder/app/RendererGl.h"
-#include "cinder/Rand.h"
 #include "cinder/gl/gl.h"
-#include <vector>
 #include "cinder/params/Params.h"
-#include "cinder/CinderImGui.h"
-#include "Mode.h"
-
 
 using namespace ci;
 using namespace ci::app;
 using namespace std;
 
-namespace Select_Param {
+namespace select_Param {
 
 #define REPULSION_FORCE_AMPLIFICATION_FACTOR 10.0f
     class Particle {
@@ -32,34 +34,33 @@ namespace Select_Param {
         void setup() override;
         void update() override;
         void draw() override;
-        void imGuiUpdate();
-
-        float radius2 = 5; // Radio de la partícula
-        float mass2 = 0.1; // Masa de la partícula
-        int Nump2 = 2;
-
-        float radius3=5; // Son variables axuliares
-        float mass3=0.1; // 
-        int Nump3=2;
 
     private:
+        float radiusAux = 5; // Radio de la partícula
+        float massAux = 0.1; // Masa de la partícula
+        int numPartAux = 0;
+
+        float radiusGlobal = 5;
+        float massGlobal = 0.1;
+        int numPartGlobal = 2;
         vector<Particle> particles;
 
+        void imGuiUpdate();
     };
 
     void SelectParam::setup() {
         // Inicializar las partículas
-        for (int i = 0; i < Nump2; i++) {
+        for (int i = 0; i < numPartGlobal; i++) {
             Particle p;
             // Configurar valores iniciales
             p.position = vec2(Rand::randFloat(getWindowWidth()), Rand::randFloat(getWindowHeight()));
             p.velocity = vec2(Rand::randFloat(-5.0f, 5.0f), Rand::randFloat(-5.0f, 5.0f));
-            p.radius = radius2;
-            p.mass = mass2;
+            p.radius = radiusGlobal;
+            p.mass = massGlobal;
             p.acceleration = vec2(0, 0);
             p.force = vec2(0, 0);
             // Asigna un color random
-            p.color = Color(CM_HSV, lmap<float>(i, 0.0f, Nump2, 0.0f, 0.66f), 1.0f, 1.0f);
+            p.color = Color(CM_HSV, lmap<float>(i, 0.0f, numPartGlobal, 0.0f, 0.66f), 1.0f, 1.0f);
             particles.push_back(p);
         }
     }
@@ -67,18 +68,18 @@ namespace Select_Param {
     void SelectParam::update() {
         float offset = 5.0f;
         imGuiUpdate();
-        if (Nump2!=Nump3) {// esto es para verificar si se añadio otra particula y crearla
-            for (int i = 0; i < Nump3-Nump2; i++) {
+        if (numPartAux!=numPartGlobal) {// esto es para verificar si se añadio otra particula y crearla
+            for (int i = 0; i < numPartAux; i++) {
                 Particle p;
                 // Configurar valores iniciales
                 p.position = vec2(Rand::randFloat(getWindowWidth()), Rand::randFloat(getWindowHeight()));
                 p.velocity = vec2(Rand::randFloat(-5.0f, 5.0f), Rand::randFloat(-5.0f, 5.0f));
-                p.radius = radius2;
-                p.mass = mass2;
+                p.radius = radiusAux;
+                p.mass = massAux;
                 p.acceleration = vec2(0, 0);
                 p.force = vec2(0, 0);
                 // Asigna un color random
-                p.color = Color(CM_HSV, lmap<float>(i, 0.0f, Nump2, 0.0f, 0.66f), 1.0f, 1.0f);
+                p.color = Color(CM_HSV, lmap<float>(i, 0.0f, numPartAux, 0.0f, 0.66f), 1.0f, 1.0f);
                 particles.push_back(p);
             }
 
@@ -90,13 +91,18 @@ namespace Select_Param {
             Particle& p = particles[i];
             // Calcular la fuerza resultante que actúa sobre la partícula
             p.force = vec2(0, 0);
-            if (mass2 != mass2 || radius2 != radius3) { // esto es para verificar que se haya hecho algun cambio en los parametros para no realizar el cambio si no es necesario
+            if (massAux != massAux || radiusAux != radiusGlobal) { // esto es para verificar que se haya hecho algun cambio en los parametros para no realizar el cambio si no es necesario
                 for (int i = 0; i < particles.size(); i++) {
                     Particle& p = particles[i];
-                    p.radius = radius2;
-                    p.mass = mass2;
+                    p.radius = radiusAux;
+                    p.mass = massAux;
                 }
             }
+            // Actualiz el estado de las variables 
+            // para la siguiente iteración
+            radiusGlobal = radiusAux;
+            massGlobal = massAux;
+            numPartGlobal = numPartAux;
             for (int j = 0; j < particles.size(); j++) {
                 if (i != j) {
                     Particle& other = particles[j];
@@ -148,16 +154,21 @@ namespace Select_Param {
     }
 
     void SelectParam::imGuiUpdate() {
-        ImGui::Begin("Simualcion de choque");
+        ImGui::Begin("Parámetros");
         ImGui::Separator();
-        radius3 = radius2;
-        ImGui::DragFloat("Radio de las esferas", &radius2, 0.1f, 5.0f, 20.0f);
-        mass3 = mass2; 
-        ImGui::DragFloat("Masa de las esferas", &mass2, 0.1f, 0.1f, 10.0f);
-        Nump3 = Nump2;
-        ImGui::DragInt("Numero de esferas", &Nump2, 1.0f, 2, 50);
+        // El label de DragFloat debe ser distinto,
+        // sino cinder lo toma como el mismo campo
+        ImGui::Text("Radio de las esferas");
+        ImGui::DragFloat("", &radiusAux, 0.1f, 5.0f, 20.0f);
+
+        ImGui::Text("Masa de las esferas");
+        ImGui::DragFloat(" ", &massAux, 0.1f, 0.1f, 10.0f);
+
+        ImGui::Text("Añadir esferas");
+        ImGui::DragInt("  ", &numPartAux, 1.0f, 2, 50);
+        
         ImGui::Separator();
         ImGui::End();
 
     }
-}
+} // namespace select_Param

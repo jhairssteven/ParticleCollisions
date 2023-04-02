@@ -1,4 +1,4 @@
-APP_NAME="ParticleCollision"
+APP_NAME="ParticleCollisions"
 cd proj
 cd cmake
 mkdir -p build
