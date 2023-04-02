@@ -45,9 +45,9 @@ void ParticleCollisions::imGuiUpdate() {
 |:---:|:---:|:---:|
 | [CrazyParticles](./ParticleCollisions/include/CrazyParticles.h) |  [ChangeSpeed](./ParticleCollisions/include/ChangeSpeed.h) |  [MultiShape](./ParticleCollisions/include/MultiShape.h) | 
 
-| | ![GravityFalls](./ParticleCollisions/assets/Gravity%20Falls.png) | |
+| ![SelectParam](./ParticleCollisions/assets/SelectParam.png) | ![GravityFalls](./ParticleCollisions/assets/Gravity%20Falls.png) | |
 |:---:|:---:|:---:|
-| | [GravityFalls](./ParticleCollisions/include/GravityFalls.h) | |
+| [SelectParam](./ParticleCollisions/include/SelectParam.h) | [GravityFalls](./ParticleCollisions/include/GravityFalls.h) | |
 
 
 
