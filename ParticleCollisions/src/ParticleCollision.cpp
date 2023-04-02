@@ -20,9 +20,7 @@ class ParticleCollisions : public App {
     void draw() override;
     void mouseDown(MouseEvent event) override;
     void imGuiUpdate();
-    float radius; // Radio de la partícula
-    float mass; // Masa de la partícula
-    int Nump;
+
    private:
     Mode *selectedMode;
 };
@@ -61,16 +59,7 @@ void ParticleCollisions::imGuiUpdate() {
         selectedMode->setup();
     }
     if (ImGui::Button("Select Param")) {
-        ImGui::Separator();
-        ImGui::DragFloat("Radio", &radius, 0.1f, 5.0f, 20.0f);
-        ImGui::DragFloat("Masa", &mass, 0.1f, 0.5f, 2.0f);
-        ImGui::DragInt("Numero", &Nump, 1.0f, 2, 50);
-
-        selectedMode = new Select_Param::SelectParam();
-        Select_Param.radius2 = raius;
-        Select_Param.mass2 = mass;
-        Select_Param.Nump2 = Nump;
-       
+        selectedMode = new Select_Param::SelectParam();       
         selectedMode->setup();
     }
     ImGui::End();  // Draw the ImGui UI
