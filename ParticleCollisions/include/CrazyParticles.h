@@ -15,7 +15,7 @@ using namespace std;
 
 #define NUM_PARTICLES 50
 #define REPULSION_FORCE_AMPLIFICATION_FACTOR 10.0f
-
+namespace crazy_particles {
 class Particle {
    public:
     vec2 position;      // Posición actual de la partícula
@@ -110,4 +110,5 @@ void CrazyParticles::draw() {
         gl::color(p.color);
         gl::drawSolidCircle(p.position, p.radius);
     }
+}
 }

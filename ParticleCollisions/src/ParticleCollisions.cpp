@@ -10,6 +10,8 @@
 #include "MultiShape.h"
 #include "GravityFalls.h"
 #include "SelectParam.h"
+#include "ParticlesApp.h"
+
 using namespace ci::app;
 
 class ParticleCollisions : public App {
@@ -18,6 +20,8 @@ class ParticleCollisions : public App {
     void update() override;
     void draw() override;
     void mouseDown(MouseEvent event) override;
+    void keyDown(KeyEvent event) override;
+    void mouseMove(MouseEvent event) override;
     void imGuiUpdate();
 
    private:
@@ -26,7 +30,7 @@ class ParticleCollisions : public App {
 
 void ParticleCollisions::setup() {
     ImGui::Initialize();
-    selectedMode = new CrazyParticles();
+    selectedMode = new crazy_particles::CrazyParticles();
     selectedMode->setup();
 }
 
@@ -42,7 +46,7 @@ void ParticleCollisions::imGuiUpdate() {
     ImGui::Separator();
 
     if (ImGui::Button("Crazy")) {
-        selectedMode = new CrazyParticles();
+        selectedMode = new crazy_particles::CrazyParticles();
         selectedMode->setup();
     }
     if (ImGui::Button("Multi Shape")) {
@@ -61,11 +65,25 @@ void ParticleCollisions::imGuiUpdate() {
         selectedMode = new select_Param::SelectParam();       
         selectedMode->setup();
     }
+    if (ImGui::Button("CookBook")) {
+        selectedMode = new particles_app::ParticlesApp();       
+        selectedMode->setup();
+    }
     ImGui::End();  // Draw the ImGui UI
 }
 
 void ParticleCollisions::mouseDown(MouseEvent event) {
     selectedMode->mouseDown(event);
 }
+//Implementacion inputs de teclado.
+void ParticleCollisions::keyDown( KeyEvent event) {
+    /* selectedMode->keyDown(event); */
+    if( event.getCode() == KeyEvent::KEY_ESCAPE ) {
+        quit();
+	}
+};
+void ParticleCollisions::mouseMove(MouseEvent event) {
+    selectedMode->mouseMove(event);
+};
 
 CINDER_APP(ParticleCollisions, RendererGl)
