@@ -1,6 +1,8 @@
 //Declaracion de pedendencias.
-#include "cinder/app/App.h" //Para la declaracion de la clase principal.
+#include "cinder/app/App.h" //Para la declaracion de la clase principal y sus funciones.
 #include "cinder/app/RendererGl.h" //Para renderizar.
+
+#include "cinder/Perlin.h" //Header para PerlinNoise.
 
 #include "ParticleSystem.h"
 #include "cinder/Rand.h" //Aleatorios.
@@ -24,26 +26,47 @@ class ParticlesApp : public App {
     
     //Variables y objetos(miembros) publicos.
     public:
+        float mFrequency;
+        Perlin mPerlin;
         ParticleSystem mParticleSystem; //Se declara un objeto(member) de la clase ParticleSystem con el nombre de mParticleSystem.
     
 };
 
 void ParticlesApp::setup(){
-    int numParticle = 100;
+
+    mFrequency = 0.01f;
+    mPerlin = Perlin();
+
+    int numParticle = 10;
     for( int i=0; i<numParticle; i++ ){
-        
-        ci::Rand::randomize(); //Genera una semilla aleatoria para sBase el cual a su vez es la "semilla" de randfloat. ver Rand.h. Asi la posicion inicial de las particulas es diferente.
-        float x = ci::randFloat( 0.0f, getWindowWidth() );
-        float y = ci::randFloat( 0.0f, getWindowHeight() );
-        float radius = ci::randFloat( 5.0f, 15.0f );
-        float mass = radius;
-        float drag = 0.95f;
-        Particle *particle = new Particle( vec2( x, y ), radius, mass, drag );
-        mParticleSystem.addParticle( particle );
+        mParticleSystem.createParticle();
     }
 }
 
 void ParticlesApp::update(){
+    //cout <<(getElapsedSeconds())<< "\n\t~Sin:"<<sin(getElapsedSeconds())<< endl;
+
+    vec2 oscilationVec;
+    oscilationVec.x = sin(getElapsedSeconds()*0.6f)*0.2f; //Genera un vector de oscilaciones apartir de una onda determinada por el tiempo trancurrido(Radianes). El primer numero esta relacionado a la longitud y el segundo a la amplitud.
+    oscilationVec.y = sin(getElapsedSeconds()*0.6f)*0.2f; //La funcion getElapsedSeconds() retorna el tiempo que ha transcurrido la ejecución en segundos. 
+
+    //for para iterar cada particula en el sistema, primero se define un vector que contiene variables de tipo Particle*.
+    std::vector<Particle*>::iterator it; 
+    for(it = mParticleSystem.particles.begin(); it != mParticleSystem.particles.end(); ++it ) {
+
+        if((*it)->position.x > getWindowWidth() || (*it)->position.y > getWindowHeight()){
+            //Comprueba que la particula siga en pantalla y si no la destruye para crear otra en pantalla.
+            mParticleSystem.destroyParticle((*it));
+            mParticleSystem.createParticle();
+            continue;
+        }
+        else{
+            vec2 windForce = mPerlin.dfBm( (*it)->position * mFrequency );
+            (*it)->forces += windForce * 0.2f;
+            (*it)->forces += oscilationVec;
+        }
+    }
+
     mParticleSystem.update();
 }
 

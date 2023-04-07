@@ -9,8 +9,8 @@ using namespace std;
 
 class Particle{
 
-    //Constructor.
     public:
+    //Constructor.
         Particle(const ci::vec2& position, float radius,float mass, float drag);
     
     //Funciones basicas de cinder.
