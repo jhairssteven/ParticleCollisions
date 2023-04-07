@@ -3,19 +3,21 @@ Implementación de sistemas de partículas con renderizado y texturizado para la
 
 # Requerimientos
 * Linux
-* Cinder ([¿Cómo instalar en linux?](https://libcinder.org/docs/guides/linux-notes/ubuntu.html))
+* Cinder - [¿Cómo instalar en linux?](https://libcinder.org/docs/guides/linux-notes/ubuntu.html)
 
 # ¿Cómo crear un nuevo modo?
 ## Creación del archivo principal
 Cree un archivo `.h` en la carpeta [include](../DrivingCinder/ParticleCollisions/include/). Si su clase se llama `NewMode`, luego esta debe heredar de la clase abstracta [`Mode`](../DrivingCinder/ParticleCollisions/include/Mode.h). La estructura mínima de la clase debe ser:
 
 ```cpp
-class NewMode : public Mode {
-   public:
-    void setup();
-    void update();
-    void draw();
-};
+namespace new_mode {
+    class NewMode : public Mode {
+    public:
+        void setup();
+        void update();
+        void draw();
+    };
+}
 ```
 ## Puesta en marcha
 - Para integrar las funcionalidades del nuevo modo, incluir el archivo `NewMode.h` en el archivo principal ([ParticleCollisions.cpp](./ParticleCollisions/src/ParticleCollisions.cpp)) como un header file.
@@ -30,8 +32,8 @@ void ParticleCollisions::imGuiUpdate() {
     ...
 
     // New Mode
-    if (ImgGui::Butten("New Mode")) {
-        selectedMode = new NewMode();
+    if (ImgGui::Button("New Mode")) {
+        selectedMode = new new_mode::NewMode();
         selectedMode->setup();
     }
 
