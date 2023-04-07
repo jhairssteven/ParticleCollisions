@@ -16,7 +16,6 @@ class NewMode : public Mode {
     void update();
     void draw();
 };
-
 ```
 ## Puesta en marcha
 - Para integrar las funcionalidades del nuevo modo, incluir el archivo `NewMode.h` en el archivo principal ([ParticleCollisions.cpp](./ParticleCollisions/src/ParticleCollisions.cpp)) como un header file.
@@ -52,4 +51,7 @@ void ParticleCollisions::imGuiUpdate() {
 
 
 # ¿Cómo usarlo?
-Corra el archivo [startup.sh](./ParticleCollisions/startup.sh). Este archivo compila las dependencias necesarias y corre la simulación. 
+```shell
+ParticleCollisions$ make -f makefile.mk
+```
+
