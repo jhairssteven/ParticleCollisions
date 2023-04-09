@@ -4,20 +4,11 @@
 using namespace ci;
 using namespace std;
 
-Particle::Particle( const ci::vec2& position, float radius, float mass, float drag ){
-    this->position = position;
-    this->radius = radius;
-    this->mass = mass;
-    this->drag = drag;
-    prevPosition = position;
-    ci::vec2 forces = {0, 0};
-}
-
 void Particle::update(){
-    ci::vec2 temp = position;
+
     ci::vec2 vel = ( position - prevPosition ) * drag;
+    prevPosition = position;
     position += vel + forces / mass;
-    prevPosition = temp;
     ci::vec2 forces = {0, 0};
 }
 

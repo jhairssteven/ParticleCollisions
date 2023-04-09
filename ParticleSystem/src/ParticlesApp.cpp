@@ -37,7 +37,7 @@ void ParticlesApp::setup(){
     mFrequency = 0.01f;
     mPerlin = Perlin();
 
-    int numParticle = 10;
+    int numParticle = 1000;
     for( int i=0; i<numParticle; i++ ){
         mParticleSystem.createParticle();
     }
@@ -47,14 +47,14 @@ void ParticlesApp::update(){
     //cout <<(getElapsedSeconds())<< "\n\t~Sin:"<<sin(getElapsedSeconds())<< endl;
 
     vec2 oscilationVec;
-    oscilationVec.x = sin(getElapsedSeconds()*0.6f)*0.2f; //Genera un vector de oscilaciones apartir de una onda determinada por el tiempo trancurrido(Radianes). El primer numero esta relacionado a la longitud y el segundo a la amplitud.
+    oscilationVec.x = sin(getElapsedSeconds()*0.6f)*0.1f; //Genera un vector de oscilaciones apartir de una onda determinada por el tiempo trancurrido(Radianes). El primer numero esta relacionado a la longitud y el segundo a la amplitud.
     oscilationVec.y = sin(getElapsedSeconds()*0.6f)*0.2f; //La funcion getElapsedSeconds() retorna el tiempo que ha transcurrido la ejecución en segundos. 
 
-    //for para iterar cada particula en el sistema, primero se define un vector que contiene variables de tipo Particle*.
+    //for para iterar cada particula en el sistema, primero se define un vector que contiene variables de tipo Particle* (Apuntadores a objetos de la clase Particle).
     std::vector<Particle*>::iterator it; 
     for(it = mParticleSystem.particles.begin(); it != mParticleSystem.particles.end(); ++it ) {
 
-        if((*it)->position.x > getWindowWidth() || (*it)->position.y > getWindowHeight()){
+        if((*it)->position.x > getWindowWidth()  || (*it)->position.x < 0 || (*it)->position.y > getWindowHeight() || (*it)->position.y < 0){
             //Comprueba que la particula siga en pantalla y si no la destruye para crear otra en pantalla.
             mParticleSystem.destroyParticle((*it));
             mParticleSystem.createParticle();
@@ -71,7 +71,7 @@ void ParticlesApp::update(){
 }
 
 void ParticlesApp::draw(){
-    gl::clear( Color( 0, 0, 0 ) );
+    gl::clear( Color( 0, 0, 0) ); //Asigna el color del fondo de la ventana. En este caso ( 0, 0, 0) para negro. El maximo es ( 1, 1, 1).
     gl::setMatricesWindow( getWindowWidth(), getWindowHeight() );
     mParticleSystem.draw();
 }
