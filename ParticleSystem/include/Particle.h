@@ -11,18 +11,18 @@ class Particle{
 
     public:
     //Constructor.
-        Particle(const ci::vec2& position, float radius,float mass, float drag)
-            :position(position), prevPosition(position), radius(radius), mass(mass), drag(drag), forces({0,0}){};
+        Particle(const ci::vec2& position, float radius,float mass, float drag)                                         // Constructor de los objetos de tipo 'Particle'.
+            :position(position), prevPosition(position), radius(radius), mass(mass), drag(drag), forces({0,0}){};       // Lista de asignación para las variables miembro.
     
     //Funciones de cinder.
-        void update();
-        void draw();
+        void update();                                                                                                  //Contiene el algoritmo para la funcion update() de la App principal.
+        void draw();                                                                                                    //Contiene el algoritmo para la funcion draw() de la App principal.
 
-    //Las variables necesarias.
-        ci::vec2 position;
-        ci::vec2 prevPosition;
-        ci::vec2 forces;
-        float radius;
-        float mass;
-        float drag;
+    //Variables miembros de la clase.
+        ci::vec2 position;                          // Posición.
+        ci::vec2 prevPosition;                      // Posicion previa.
+        ci::vec2 forces;                            // Fuerzas que se experimentan.
+        float radius;                               // Radio de particula.
+        float mass;                                 // Masa de parcula. 
+        float drag;                                 // Arrastre.
 };
