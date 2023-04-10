@@ -15,5 +15,6 @@ set ( SRC_FILES
 ci_make_app(
 	SOURCES     ${SRC_FILES}
 	INCLUDES    ${APP_PATH}/include
+		    ${APP_PATH}/include/PerlinNoiseClasses
 	CINDER_PATH ${CINDER_PATH}
 )

@@ -9,4 +9,5 @@ class Mode {
     virtual void update() = 0;
     virtual void draw() = 0;
     virtual void mouseDown(ci::app::MouseEvent event){};
+    virtual void mouseMove(ci::app::MouseEvent event){};
 };

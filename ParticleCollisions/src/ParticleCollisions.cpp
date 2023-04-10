@@ -9,8 +9,12 @@
 #include "ChangeSpeed.h"
 #include "MultiShape.h"
 #include "GravityFalls.h"
+#include "ParticlesApp.h"
 
 using namespace ci::app;
+
+// Configuraciones de la aplicación.
+void prepareSettings( App::Settings* settings);
 
 class ParticleCollisions : public App {
    public:
@@ -18,6 +22,8 @@ class ParticleCollisions : public App {
     void update() override;
     void draw() override;
     void mouseDown(MouseEvent event) override;
+    void mouseMove(MouseEvent event) override;
+    void keyDown( KeyEvent event ) override;
     void imGuiUpdate();
 
    private:
@@ -35,7 +41,9 @@ void ParticleCollisions::update() {
     imGuiUpdate();
 }
 
-void ParticleCollisions::draw() { selectedMode->draw(); }
+void ParticleCollisions::draw() { 
+    selectedMode->draw(); 
+}
 
 void ParticleCollisions::imGuiUpdate() {
     ImGui::Begin("Modos");
@@ -57,6 +65,10 @@ void ParticleCollisions::imGuiUpdate() {
         selectedMode = new gravity_falls::GravityFalls();
         selectedMode->setup();
     }
+    if (ImGui::Button("PerlinNoise")) {
+        selectedMode = new ParticlesApp::ParticlesApp();
+        selectedMode->setup();
+    }
     ImGui::End();  // Draw the ImGui UI
 }
 
@@ -64,4 +76,25 @@ void ParticleCollisions::mouseDown(MouseEvent event) {
     selectedMode->mouseDown(event);
 }
 
-CINDER_APP(ParticleCollisions, RendererGl)
+void ParticleCollisions::mouseMove(MouseEvent event){
+    selectedMode->mouseMove(event);
+}
+
+void ParticleCollisions::keyDown( KeyEvent event ){
+
+	if( event.getCode() == KeyEvent::KEY_ESCAPE ) {                 //Si se preciona 'ESC' cierra el programa.
+			quit();
+	}
+}
+
+// Definicion de configuraciónes.
+void prepareSettings(App::Settings *settings){
+
+    settings->setWindowSize(1280, 640);                 //Tamaño de la pantalla.
+    settings->setFullScreen( false   );                 //Si es pantalla completa.
+    settings->setTitle( "Particle System ~ HPC" );      //Titulo de la ventana.
+    settings->setFrameRate( 60 );                       //Frames maximos.
+}
+
+
+CINDER_APP(ParticleCollisions, RendererGl, prepareSettings)
