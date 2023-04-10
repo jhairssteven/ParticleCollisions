@@ -44,7 +44,7 @@ void ParticleSystem::createParticle(){
     ci::Rand::randomize();                                                  //Genera una semilla aleatoria para sBase el cual a su vez es la "semilla" de randfloat. ver Rand.h. Asi la posicion inicial de las particulas es diferente.
     float x = ci::randFloat( 0.0f, getWindowWidth() );                      //Posición aleatoria en x.
     float y = ci::randFloat( 0.0f, getWindowHeight() );                     //Posición aleatoria en y.
-    float radius = Rand::randFloat(1.0f, 1.5f);                             //Radio.
+    float radius = Rand::randFloat(1.0f, 4.0f);                             //Radio.
     float mass = radius*100;                                                //Mass.
     float drag = 0.2f;                                                      //Arrastre.
     Particle *particle = new Particle( vec2( x, y ), radius, mass, drag );  //Creacion del apuntador del tipo 'Particle' que simula una particula.
