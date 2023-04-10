@@ -35,7 +35,7 @@ void ParticleSystem::draw(){
 }
 
 void ParticleSystem::addParticle( Particle* particle ){
-    particles.push_back( particle );
+    particles.push_back( particle );                                        // Agrega la particula a la cola del vector.
 }
 
 void ParticleSystem::createParticle(){

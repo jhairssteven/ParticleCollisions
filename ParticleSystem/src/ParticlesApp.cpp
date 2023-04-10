@@ -24,8 +24,8 @@ class ParticlesApp : public App {
 	    void update();                                         //Funcion que actualiza la informacion de la App y sus elementos en cada frame.
 	    void draw();                                           //Funcion que utiliza la información para hacer los graficos respectivos.
         void keyDown( KeyEvent event );                        //Implementacion inputs de teclado.
-        void mouseMove(MouseEvent event);
-        void mouseDown(MouseEvent event);
+        void mouseMove(MouseEvent event);                      //Implementacion input del movimiento del mouse.
+        void mouseDown(MouseEvent event);                      //Implementacion input del click del mouse.
     
     //Variables y objetos(miembros) publicos.
     public:
@@ -36,28 +36,28 @@ class ParticlesApp : public App {
         ParticleSystem mParticleSystem;                        //Se declara un objeto(member) de la clase ParticleSystem con el nombre de mParticleSystem.
 
         //Variables miembro para las fuerzas por input de mouse.
-        vec2 attrPosition;
-        float attrFactor;
-        float repulsionRadius;
-        float repulsionFactor;
+        vec2 attrPosition;                                     // Vector para leer la posicion del mouse.
+        float attrFactor;                                      // Para la fuerza de atraccion.
+        float repulsionRadius;                                 // Para el radio de efecto de la repulsion.
+        float repulsionFactor;                                 // Para la fuerza de repulsión.
 };
 
 void ParticlesApp::setup(){
 
     //Inicialisacion de perlin.
-    mFrequency = 0.01f;                                        //Frecuencia al gusto.
-    mPerlin = Perlin();                                        //Se llama al constructor de la funcion Perlin() del objeto perlin para inicializarlo.
+    mFrequency = 0.01f;                                        // Frecuencia al gusto.
+    mPerlin = Perlin();                                        // Se llama al constructor de la funcion Perlin() del objeto perlin para inicializarlo.
 
-    //Inicializacion de inputs de mause.
-    attrPosition = getWindowCenter();
-    attrFactor = 0.002f;
+    //Inicialización de inputs de mause.
+    attrPosition = getWindowCenter();                          // En un inicio si el mouse no esta en pantalla, la fuerza de atracción es al centro de la ventana.
+    attrFactor = 0.7f;                                       // Factor de atracción para las particulas.
 
-    repulsionRadius = 250.f;
-    repulsionFactor = 10.f;
+    repulsionRadius = 250.f;                                   // Radio de efecto de la repulsión.
+    repulsionFactor = 10.f;                                    // Factor para el efecto de la fuerza de repulsión.
 
-    int numParticle = 850;                                    //Numero de particulas del sistema.
+    int numParticle = 850;                                     // Numero de particulas del sistema.
     for( int i=0; i<numParticle; i++ ){                                    
-        mParticleSystem.createParticle();                      //Se llama la funcion de la clase del sistema de particulas que permite crear objeto 'Particle'.
+        mParticleSystem.createParticle();                      // Se llama la funcion de la clase del sistema de particulas que permite crear objeto 'Particle'.
     }
 }
 
@@ -87,9 +87,9 @@ void ParticlesApp::update(){
             (*it)->forces += oscilationVec;                                // Tambien se agrega la oscilación calculada anteriormente.
 
             //Fuerza de input de mouse.
-            vec2 attrForce = attrPosition - (*it)->position;
-            attrForce *= attrFactor;
-            (*it)->forces += attrForce;
+            vec2 attrForce = glm::normalize(attrPosition - (*it)->position);                // Vectoriza la fuerza de atracción respecto a la posición.
+            attrForce *= attrFactor;                                                        // Aplica el factor de atracción.
+            (*it)->forces += attrForce;                                                     // La incluye en la variable miembro de la particula para que haga efecto.
         }
     }
 
@@ -110,30 +110,30 @@ void ParticlesApp::keyDown( KeyEvent event ){
 	}
 }
 
-void ParticlesApp::mouseMove(MouseEvent event){
+void ParticlesApp::mouseMove(MouseEvent event){                     // Registra el movimiento del mouse.
 
-    attrPosition.x = event.getPos().x;
-    attrPosition.y = event.getPos().y;
+    attrPosition.x = event.getPos().x;                              // Llena las variables miembros de la app para utilizarlas en las funciones. En este caso guarda la posicion del mouse.
+    attrPosition.y = event.getPos().y;                              // Llena las variables miembros de la app para utilizarlas en las funciones. En este caso guarda la posicion del mouse.       
 }
 
-void ParticlesApp::mouseDown(MouseEvent event){
+void ParticlesApp::mouseDown(MouseEvent event){                     // Registra si se realizo clic en el mouse.
 
 
-    for( std::vector<Particle*>::iterator it = mParticleSystem.particles.begin(); it != mParticleSystem.particles.end(); ++it ) {
+    for( std::vector<Particle*>::iterator it = mParticleSystem.particles.begin(); it != mParticleSystem.particles.end(); ++it ) {    
 
-        vec2 repulsionForce = (*it)->position - vec2(float(event.getPos().x), float(event.getPos().y));
-        repulsionForce = glm::normalize(repulsionForce) * math<float>::max(0.f, repulsionRadius - length(repulsionForce));
-        (*it)->forces += repulsionForce*repulsionFactor;
+        vec2 repulsionForce = (*it)->position - vec2(float(event.getPos().x), float(event.getPos().y));                                    // Vectoriza la repulsion respecto de la posicion de la particula.
+        repulsionForce = glm::normalize(repulsionForce) * math<float>::max(0.f, repulsionRadius - length(repulsionForce));                 // Normaliza la repulsion y le aplica un factor que depende de la distancia. Ademas si la particula esta fuera del radio de incidencia no le palica fuerzas.
+        (*it)->forces += repulsionForce*repulsionFactor;                                                                                   // LE aplica un factor adicional. Para darle mas o menos fuerza a la repulsion.
     }
 }
 
 // Definicion de configuraciónes.
 void prepareSettings(App::Settings *settings){
 
-    settings->setWindowSize(1280, 640);
-    settings->setFullScreen( false   );
-    settings->setTitle( "Particle System ~ HPC" );
-    settings->setFrameRate( 60 );
+    settings->setWindowSize(1280, 640);                 //Tamaño de la pantalla.
+    settings->setFullScreen( false   );                 //Si es pantalla completa.
+    settings->setTitle( "Particle System ~ HPC" );      //Titulo de la ventana.
+    settings->setFrameRate( 60 );                       //Frames maximos.
 }
 
 CINDER_APP(ParticlesApp, RendererGl, prepareSettings)
