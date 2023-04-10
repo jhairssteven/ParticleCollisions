@@ -3,13 +3,15 @@
 #include "cinder/CinderImGui.h"
 #include "cinder/app/RendererGl.h"
 #include "cinder/app/App.h"
-
+#include "Wallparticle.h"
 #include "Mode.h"
 #include "CrazyParticles.h"
 #include "ChangeSpeed.h"
 #include "MultiShape.h"
+
 #include "GravityFalls.h"
 #include "ParticlesApp.h"
+
 
 using namespace ci::app;
 
@@ -65,8 +67,13 @@ void ParticleCollisions::imGuiUpdate() {
         selectedMode = new gravity_falls::GravityFalls();
         selectedMode->setup();
     }
+
     if (ImGui::Button("PerlinNoise")) {
         selectedMode = new ParticlesApp::ParticlesApp();
+    }
+
+    if (ImGui::Button("Wall")) {
+        selectedMode = new Wall_particle::Wallparticle();
         selectedMode->setup();
     }
     ImGui::End();  // Draw the ImGui UI
