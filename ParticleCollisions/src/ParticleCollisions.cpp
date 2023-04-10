@@ -70,6 +70,7 @@ void ParticleCollisions::imGuiUpdate() {
 
     if (ImGui::Button("PerlinNoise")) {
         selectedMode = new ParticlesApp::ParticlesApp();
+        selectedMode->setup();
     }
 
     if (ImGui::Button("Wall")) {
