@@ -8,6 +8,7 @@
 #include "CrazyParticles.h"
 #include "ChangeSpeed.h"
 #include "MultiShape.h"
+#include "SelectParam.h"
 
 #include "GravityFalls.h"
 #include "ParticlesApp.h"
@@ -75,6 +76,11 @@ void ParticleCollisions::imGuiUpdate() {
 
     if (ImGui::Button("Wall")) {
         selectedMode = new Wall_particle::Wallparticle();
+        selectedMode->setup();
+    }
+
+    if (ImGui::Button("SelectParam")) {
+        selectedMode = new select_Param::SelectParam();
         selectedMode->setup();
     }
     ImGui::End();  // Draw the ImGui UI
