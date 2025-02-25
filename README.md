@@ -1,13 +1,13 @@
 # ParticleCollisions
-Implementación de sistemas de partículas con renderizado y texturizado para la simulación de colisiones, utilizando la librería [Cinder](https://libcinder.org/) de C++.
+Implementation of particle systems with rendering and texturing for collision simulation, using the [Cinder](https://libcinder.org/) C++ library.
 
-# Requerimientos
+# Requirements
 * Linux
-* Cinder - [¿Cómo instalar en linux?](https://libcinder.org/docs/guides/linux-notes/ubuntu.html)
+* Cinder - [How to install on Linux?](https://libcinder.org/docs/guides/linux-notes/ubuntu.html)
 
-# ¿Cómo crear un nuevo modo?
-## Creación del archivo principal
-Cree un archivo `.h` en la carpeta [include](../DrivingCinder/ParticleCollisions/include/). Si su clase se llama `NewMode`, luego esta debe heredar de la clase abstracta [`Mode`](../DrivingCinder/ParticleCollisions/include/Mode.h). La estructura mínima de la clase debe ser:
+# How to create a new mode?
+## Creating the main file
+Create a `.h` file in the [include](../DrivingCinder/ParticleCollisions/include/) folder. If your class is named `NewMode`, it should inherit from the abstract class [`Mode`](../DrivingCinder/ParticleCollisions/include/Mode.h). The minimum class structure should be:
 
 ```cpp
 namespace new_mode {
@@ -19,14 +19,13 @@ namespace new_mode {
     };
 }
 ```
-## Puesta en marcha
-- Para integrar las funcionalidades del nuevo modo, incluir el archivo `NewMode.h` en el archivo principal ([ParticleCollisions.cpp](./ParticleCollisions/src/ParticleCollisions.cpp)) como un header file.
-- En la función [`imGuiUpdate()`](./ParticleCollisions/src/ParticleCollisions.cpp) incluir un nuevo botón, con su inicialización. Así:
-
+## Startup
+- To integrate the functionalities of the new mode, include the `NewMode.h` file in the main file ([ParticleCollisions.cpp](./ParticleCollisions/src/ParticleCollisions.cpp)) as a header file.
+- In the [`imGuiUpdate()`](./ParticleCollisions/src/ParticleCollisions.cpp) function, include a new button with its initialization as follows:
 
 ```cpp
 void ParticleCollisions::imGuiUpdate() {
-    ImGui::Begin("Modos");
+    ImGui::Begin("Modes");
     ImGui::Separator();
 
     ...
@@ -41,7 +40,7 @@ void ParticleCollisions::imGuiUpdate() {
 }
 ```
 
-# Modos implementados
+# Implemented modes
 | ![CrazyParticles](./ParticleCollisions/assets/Crazy.png)  | ![ChangeSpeedAudioBlocks](./ParticleCollisions/assets/Change%20speed.png) | ![MultiShape](./ParticleCollisions/assets/Multi%20shape.png) |
 |:---:|:---:|:---:|
 | [CrazyParticles](./ParticleCollisions/include/CrazyParticles.h) |  [ChangeSpeed](./ParticleCollisions/include/ChangeSpeed.h) |  [MultiShape](./ParticleCollisions/include/MultiShape.h) | 
@@ -50,10 +49,6 @@ void ParticleCollisions::imGuiUpdate() {
 |:---:|:---:|:---:|
 | [SelectParam](./ParticleCollisions/include/SelectParam.h) | [GravityFalls](./ParticleCollisions/include/GravityFalls.h) | [CookBook](./ParticleCollisions/include/ParticlesApp.h) |
 
-
-
-# ¿Cómo usarlo?
+# How to use it?
 ```shell
 ParticleCollisions$ make -f makefile.mk
-```
-
